@@ -1,26 +1,34 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <base target="_top">
-  </head>
-  <body>
-    <form id="postForm">
-      <input type="text" id="title" placeholder="Title"><br><br>
-      <textarea id="content" placeholder="Content" rows="5" cols="30"></textarea><br><br>
-      <button type="submit">Submit</button>
-    </form>
-    <div id="status"></div>
+<head>
+  <title>Blogger Submit</title>
+</head>
+<body>
+  <h2>Submit a Blog Post</h2>
+  <form id="blogForm">
+    <input type="text" id="title" placeholder="Title" required><br><br>
+    <textarea id="content" placeholder="Content" required></textarea><br><br>
+    <button type="submit">Submit</button>
+  </form>
+  <p id="response"></p>
 
-    <script>
-      document.getElementById("postForm").addEventListener("submit", function(e) {
-        e.preventDefault();
-        google.script.run.withSuccessHandler(function(msg) {
-          document.getElementById("status").innerHTML = msg;
-        }).createBloggerPost(
-          document.getElementById("title").value,
-          document.getElementById("content").value
-        );
+  <script>
+    document.getElementById("blogForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const title = document.getElementById("title").value;
+      const content = document.getElementById("content").value;
+
+      const response = await fetch("https://script.google.com/macros/s/AKfycbxv2v1ol7EK0gEQUXSOEu-nLgV8F_EjhHWXR-qoQGBdT9S02OZn04pY5wbTS62SfHRkwA/exec", {
+        method: "POST",
+        body: JSON.stringify({ title, content }),
+        headers: {
+          "Content-Type": "application/json"
+        }
       });
-    </script>
-  </body>
+
+      const text = await response.text();
+      document.getElementById("response").innerText = text;
+    });
+  </script>
+</body>
 </html>
