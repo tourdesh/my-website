@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+    <form id="postForm">
+      <input type="text" id="title" placeholder="Title"><br><br>
+      <textarea id="content" placeholder="Content" rows="5" cols="30"></textarea><br><br>
+      <button type="submit">Submit</button>
+    </form>
+    <div id="status"></div>
+
+    <script>
+      document.getElementById("postForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        google.script.run.withSuccessHandler(function(msg) {
+          document.getElementById("status").innerHTML = msg;
+        }).createBloggerPost(
+          document.getElementById("title").value,
+          document.getElementById("content").value
+        );
+      });
+    </script>
+  </body>
+</html>
