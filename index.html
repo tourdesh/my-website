@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Blogger Submit</title>
+  <title>Submit Blog Post</title>
 </head>
 <body>
-  <h2>Submit a Blog Post</h2>
-  <form id="blogForm">
+  <h2>Submit to Blogger</h2>
+  <form id="postForm">
     <input type="text" id="title" placeholder="Title" required><br><br>
     <textarea id="content" placeholder="Content" required></textarea><br><br>
     <button type="submit">Submit</button>
@@ -13,21 +13,26 @@
   <p id="response"></p>
 
   <script>
-    document.getElementById("blogForm").addEventListener("submit", async function(e) {
+    document.getElementById("postForm").addEventListener("submit", function (e) {
       e.preventDefault();
+
       const title = document.getElementById("title").value;
       const content = document.getElementById("content").value;
 
-      const response = await fetch("https://script.google.com/macros/s/AKfycbxv2v1ol7EK0gEQUXSOEu-nLgV8F_EjhHWXR-qoQGBdT9S02OZn04pY5wbTS62SfHRkwA/exec", {
+      fetch("https://script.google.com/macros/s/AKfycbxv2v1ol7EK0gEQUXSOEu-nLgV8F_EjhHWXR-qoQGBdT9S02OZn04pY5wbTS62SfHRkwA/exec", {
         method: "POST",
-        body: JSON.stringify({ title, content }),
         headers: {
           "Content-Type": "application/json"
-        }
-      });
-
-      const text = await response.text();
-      document.getElementById("response").innerText = text;
+        },
+        body: JSON.stringify({ title: title, content: content })
+      })
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("response").innerText = data;
+        })
+        .catch(error => {
+          document.getElementById("response").innerText = "Error: " + error;
+        });
     });
   </script>
 </body>
